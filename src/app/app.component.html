@@ -1,0 +1,113 @@
+<div class="ng-autocomplete" style="margin: 10px; width: 30vw;">
+  <ng-autocomplete 
+    placeholder="Search"
+    [data]="city" 
+    [searchKeyword]="keyword" 
+    (selected)='selectEvent($event)'
+    (inputChanged)='onChangeSearch($event)' 
+    (inputFocused)='onFocused($event)' 
+    [itemTemplate]="itemTemplate"
+    [notFoundTemplate]="notFoundTemplate"
+  >
+  </ng-autocomplete>
+
+  <ng-template #itemTemplate let-item>
+    <a [innerHTML]="item.name"></a>
+  </ng-template>
+
+  <ng-template #notFoundTemplate let-notFound>
+    <div [innerHTML]="notFound"></div>
+  </ng-template>
+</div>
+
+<div class="card" style="padding: 20px; margin: 10px; flex-direction: column; width: 98%; display: flex;">
+  <span style="font-weight: bold; font-size: 24px;">{{state?.city}}, {{state?.country}} </span>
+  <span style="font-weight: 600;">
+    {{ myDate | date: 'EEEE, dd MMMM yyyy hh:mm a' }}
+  </span>
+  <div style="flex-direction: row; display: flex; justify-content: space-between;">
+    <div class="card"
+      style="width: 100%; margin: 10px 0px 10px 0px; padding: 10px; background-image: linear-gradient(180deg, #2bc3fa, #cdeaf5);">
+      <div style="flex-direction: row; display: flex; justify-content: space-between; align-items: center;">
+        <div style="flex-direction: column; display: flex; justify-content: center; align-items: center;">
+          <img style="width: 100px;" src="http://openweathermap.org/img/wn/{{weather?.weather[0]?.icon}}.png" />
+          <span
+            style="text-transform: capitalize; letter-spacing: 2px; font-weight: 700;">{{weather?.weather[0]?.description}}</span>
+        </div>
+        <div style="flex-direction: column; display: flex; justify-content: center; align-items: flex-start;">
+          <span style="letter-spacing: 2px; font-weight: 400; line-height: 10px;">
+            <i class="far fa-sun"></i>
+            SUNRISE
+          </span>
+          <strong style="margin-left: 25px;">{{ weather?.sunrise * 1000 | date: 'hh:mm a' }}</strong>
+          <span style="letter-spacing: 2px; font-weight: 400; line-height: 10px; margin-top: 10px;">
+            <i class="fas fa-sun"></i>
+            SUNSET
+          </span>
+          <strong style="margin-left: 25px;">{{ weather?.sunset * 1000 | date: 'hh:mm a' }}</strong>
+        </div>
+        <div style="flex-direction: column; display: flex; justify-content: center; align-items: flex-start;">
+          <span style="letter-spacing: 2px; font-weight: 400; line-height: 10px;">
+            <i class="far fa-moon"></i>
+            MOONRISE
+          </span>
+          <strong style="margin-left: 25px;">{{ weather?.moonrise * 1000 | date: 'hh:mm a' }}</strong>
+          <span style="letter-spacing: 2px; font-weight: 400; line-height: 10px; margin-top: 10px;">
+            <i class="fas fa-moon"></i>
+            MOONSET
+          </span>
+          <strong style="margin-left: 25px;">{{ weather?.moonset * 1000 | date: 'hh:mm a' }}</strong>
+        </div>
+        <div style="flex-direction: column; display: flex; text-align: right; line-height: 30px;">
+          <span>
+            <a style="letter-spacing: 1px; font-weight: 400;">TEMPERATURE </a>
+            <strong> {{ weather?.temp.day - minus | number:'1.0-0'}}&#8451;</strong>
+          </span>
+          <span>
+            <a style="letter-spacing: 1px; font-weight: 400;">DEWPOINT </a>
+            <strong>{{ weather?.dew_point - minus | number:'1.0-0'}}&#8451;</strong>
+          </span>
+          <span>
+            <a style="letter-spacing: 1px; font-weight: 400;">WIND SPEED </a>
+            <strong>{{weather?.wind_speed * 10 | number:'1.0-0'}}MPH</strong>
+          </span>
+          <span>
+            <a style="letter-spacing: 1px; font-weight: 400;">HUMIDITY </a>
+            <strong>{{weather?.humidity}}%</strong>
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div style="width: 100%;">
+    <div *ngFor="let item of listWeather; index as i">
+      <div class="card" style="flex-direction: row; margin-bottom: 5px; padding: 5px; align-items: center;">
+        <div style="width: 25%;">
+          <span style="font-weight: 500;">{{ item?.dt * 1000 | date: 'EEE, dd MMM yyyy' : 'en' }}</span>
+        </div>
+        <div style="width: 25%;">
+          <img style="width: 30px;" src="http://openweathermap.org/img/wn/{{weather?.weather[0]?.icon}}.png" />
+          <span style="text-transform: capitalize; font-weight: 500;">{{item?.weather[0]?.description}}</span>
+        </div>
+        <div style="width: 20%;">
+          <i class="fas fa-temperature-high"></i>
+          <span style="font-weight: 500; margin-left: 10px;">
+            {{ item?.temp.min - 273.15 | number:'1.0-0' }}&#xb0; / {{ item?.temp.max - 273.15 | number:'1.0-0' }}&#8451;
+          </span>
+        </div>
+        <div style="width: 20%;">
+          <i class="fas fa-wind"></i>
+          <span style="font-weight: 500; margin-left: 10px;">
+            {{ item?.wind_speed * 10 | number:'1.0-0' }} mph
+          </span>
+        </div>
+        <div style="width: 10%;">
+          <i class="fas fa-tint"></i>
+          <span style="text-transform: capitalize; font-weight: 500; margin-left: 10px;">{{item?.humidity}} %</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <router-outlet></router-outlet>
